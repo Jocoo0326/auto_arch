@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ef
 
 
 #--------------------------------------------------------------------
@@ -23,7 +23,6 @@ modify_pacman_mirror_list_file_and_sync
 #--------------------------------------------------------------------
 sed -e "s/\s*\([\+0-9a-zA-Z]*\).*/\1/" << EOF | fdisk /dev/sda
   p # print the in-memory partition table
-  o # clear the in memory partition table
   n # new partition
   p # primary partition
   1 # partition number 1
@@ -97,10 +96,11 @@ pip install pipenv ipython requests
 cd /home/${user}
 [ -f ~/.config ] || mkdir ~/.config
 cp -r ~/Configs/i3config/.config/* ~/.config/
-echo "exec i3 &" > ~/.xinitrc
+echo "exec i3 &" > .xinitrc
 echo "xinit $(which i3)" >> .profile
 
 # enable services
 systemctl enable ntpdate.service NetworkManager.service
 
-reboot
+exit
+echo "done"
