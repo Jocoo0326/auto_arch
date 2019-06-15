@@ -89,7 +89,7 @@ sed -i "s/^# \(%wheel ALL=(ALL) ALL\)/\1/" /etc/sudoers
 echo 'Installing dev environment'
 pacman -S --noconfirm git emacs nodejs npm vim gvim wget curl make gcc grep xorg-server xorg-xinit i3 dmenu chromium \
        autojump openssh sudo the_silver_searcher ttf-hack adobe-source-code-pro-fonts terminator termite ntp networkmanager keychain python-pip shadowsocks-libev
-npm install -g jscs jshint bower grunt express
+npm install -g eshint webpack live-server prettier express
 pip install pipenv ipython requests
 
 # setup i3
