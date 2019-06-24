@@ -76,7 +76,8 @@ grub-mkconfig -o /boot/grub/grub.cfg
 user="jocoo"
 password=${user}
 useradd -m -g wheel -s /bin/bash ${user} &>/dev/null ||
-    usermod -a -G wheel ${user} && mkdir -p /home/${user} && chown ${user}:wheel /home/${user}
+    usermod -a -G wheel ${user} && mkdir -p /home/${user} && \
+    chown ${user}:wheel /home/${user}
 
 # change password
 echo "${user}:${password}" | chpasswd
@@ -87,20 +88,25 @@ sed -i "s/^# \(%wheel ALL=(ALL) ALL\)/\1/" /etc/sudoers
 
 # install dev envt.
 echo 'Installing dev environment'
-pacman -S --noconfirm git emacs nodejs npm vim gvim wget curl make gcc grep xorg-server xorg-xinit i3 dmenu chromium \
-       autojump openssh sudo the_silver_searcher ttf-hack adobe-source-code-pro-fonts terminator termite ntp networkmanager keychain python-pip shadowsocks-libev
+pacman -S --noconfirm git emacs nodejs npm vim gvim wget curl make gcc grep \
+  xorg-server xorg-xinit i3 gdm dmenu chromium autojump openssh sudo \
+  the_silver_searcher ttf-hack adobe-source-code-pro-fonts otf-fira-code \
+  termite ntp networkmanager keychain python3 python-pip shadowsocks-libev \
+  feh compton htop
 npm install -g eshint webpack live-server prettier express
 pip install pipenv ipython requests
 
 # setup i3
 cd /home/${user}
-[ -f ~/.config ] || mkdir ~/.config
-cp -r ~/Configs/i3config/.config/* ~/.config/
-echo "exec i3 &" > .xinitrc
-echo "xinit $(which i3)" >> .profile
+git clone https://github.com/Jocoo0326/dwm.git
+cd dwm && ./auto.sh && cd ..
+git clone https://github.com/Jocoo0326/st.git
+cd st && ./auto.sh && cd ..
+echo "exec dwm &" > .xinitrc
+chown -R ${user} /home/${user}
 
 # enable services
-systemctl enable ntpdate.service NetworkManager.service
+systemctl enable gdm.service ntpdate.service NetworkManager.service
 
 exit
 echo "done"
